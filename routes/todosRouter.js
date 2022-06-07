@@ -59,4 +59,15 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+//! DELETE A TODO
+router.delete("/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const todo = await TodoModel.findByIdAndDelete(id);
+    res.status(200).json({ msg: "Todo was deleted" });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 module.exports = router;
