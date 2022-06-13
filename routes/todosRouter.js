@@ -16,7 +16,7 @@ router.get("/", authMiddleware, async (req, res) => {
 });
 
 //* CREATE TODOS
-router.post("/", async (req, res) => {
+router.post("/", authMiddleware, async (req, res) => {
   const todoData = req.body; // gets the data from the request
   console.log(todoData);
   try {
@@ -31,7 +31,7 @@ router.post("/", async (req, res) => {
 });
 
 //* GET TODO BY ID
-router.get("/:id", async (req, res) => {
+router.get("/:id", authMiddleware, async (req, res) => {
   const id = req.params.id;
 
   try {
@@ -46,7 +46,7 @@ router.get("/:id", async (req, res) => {
 });
 
 //* UPDATE TODO BY ID
-router.put("/:id", async (req, res) => {
+router.put("/:id", authMiddleware, async (req, res) => {
   const id = req.params.id;
   const newTodoData = req.body;
   try {
@@ -61,7 +61,7 @@ router.put("/:id", async (req, res) => {
 });
 
 //! DELETE A TODO
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authMiddleware, async (req, res) => {
   const id = req.params.id;
   try {
     const todo = await TodoModel.findByIdAndDelete(id);
