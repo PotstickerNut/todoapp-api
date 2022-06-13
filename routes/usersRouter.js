@@ -43,7 +43,7 @@ router.post(
 
       //* ==== Create new user
       // 1 Create the salt
-      const SALT = await bcrypt.genSalt(10);
+      const SALT = await bcrypt.genSalt(12);
       // 2 Use the salt to create a hash with the user password
       const hashedPassword = await bcrypt.hash(userData.password, SALT);
       // 3 assign the hashed password to the userData
@@ -59,7 +59,9 @@ router.post(
       };
       // const SECRET_KEY = "MY_SECRET_KEY";
 
-      const TOKEN = jwt.sign(payload, process.env.SECRET_KEY);
+      const TOKEN = jwt.sign(payload, process.env.SECRET_KEY, {
+        expiresIn: "2 Days",
+      });
 
       res.status(201).json({
         user: user,

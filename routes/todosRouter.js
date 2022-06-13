@@ -1,11 +1,12 @@
 const express = require("express");
 const TodoModel = require("../models/todoSchema");
+const authMiddleware = require("../middleware/authMiddleware");
 
 // create a Router
 const router = express.Router();
 
 //* Get TODOS
-router.get("/", async (req, res) => {
+router.get("/", authMiddleware, async (req, res) => {
   try {
     const todos = await TodoModel.find();
     res.status(200).json(todos);
