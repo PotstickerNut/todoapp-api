@@ -64,8 +64,9 @@ router.put("/:id", authMiddleware, async (req, res) => {
 router.delete("/:id", authMiddleware, async (req, res) => {
   const id = req.params.id;
   try {
+    // first we find the todo we're going to delete
     const todo = await TodoModel.findByIdAndDelete(id);
-    res.status(200).json({ msg: "Todo was deleted" });
+    res.status(200).json({ msg: "Todo was deleted by user" });
   } catch (error) {
     console.error(error);
   }
