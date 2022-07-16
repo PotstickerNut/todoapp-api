@@ -20,7 +20,7 @@ router.post("/", authMiddleware, async (req, res) => {
   const todoData = req.body; // gets the data from the request
   todoData.user = req.user.id;
   console.log(todoData);
-  console.log(user._id);
+  console.log(todoData.user._id);
   try {
     const todo = await TodoModel.create(todoData); // create the todo in the db
     // send back the response
