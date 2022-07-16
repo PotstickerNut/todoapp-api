@@ -69,7 +69,7 @@ router.post(
       });
     } catch (error) {
       console.log(error);
-      res.status(400).json("Bad request!!!!!");
+      res.status(400).json("Bad request");
     }
   }
 );

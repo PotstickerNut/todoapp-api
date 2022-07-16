@@ -2,10 +2,10 @@ const express = require("express");
 const TodoModel = require("../models/todoSchema");
 const authMiddleware = require("../middleware/authMiddleware");
 
-// create a Router
+// * Create a Router
 const router = express.Router();
 
-//* Get TODOS
+//* GET TODOS
 router.get("/", authMiddleware, async (req, res) => {
   try {
     const todos = await TodoModel.find();
@@ -18,29 +18,31 @@ router.get("/", authMiddleware, async (req, res) => {
 //* CREATE TODOS
 router.post("/", authMiddleware, async (req, res) => {
   const todoData = req.body; // gets the data from the request
+  todoData.user = req.user.id;
   console.log(todoData);
+  console.log(user._id);
   try {
-    const todo = await TodoModel.create(todoData); // create todo in DB
+    const todo = await TodoModel.create(todoData); // create the todo in the db
     // send back the response
     res.status(201).json(todo);
-    // res.status(201).json({data: todo});
+    // res.status(201).json({data: todo})
   } catch (error) {
     console.error(error);
-    res.status(400).json("Bad request!!!!!!");
+    res.status(400).json("Bad request");
   }
 });
 
 //* GET TODO BY ID
 router.get("/:id", authMiddleware, async (req, res) => {
   const id = req.params.id;
-
+  console.log(req.user);
   try {
     const todo = await TodoModel.findById(id);
     res.status(200).json(todo);
   } catch (error) {
     console.error(error);
     res.status(400).json({
-      msg: "ID not found",
+      msg: "Id not found",
     });
   }
 });
@@ -63,12 +65,23 @@ router.put("/:id", authMiddleware, async (req, res) => {
 //! DELETE A TODO
 router.delete("/:id", authMiddleware, async (req, res) => {
   const id = req.params.id;
+  console.log("FROM DELETE", req.user);
   try {
     // first we find the todo we're going to delete
+    const todoToDelete = await TodoModel.findById(id);
+    console.log(todoToDelete);
+    console.log(todoToDelete.user._id.toString(), "||", req.user.id);
+    // Here we check that the user who created the Todo is the one asking to delete the Todo
+    // By checking the IDs
+    if (todoToDelete.user._id.toString() !== req.user.id) {
+      // if they are NOT the same we send error message
+      return res.status(400).json({ msg: "Not Authorized!" });
+    }
+    // if they are the same IDs we delete it
     const todo = await TodoModel.findByIdAndDelete(id);
-    res.status(200).json({ msg: "Todo was deleted by user" });
+    res.status(200).json("Todo deleted by the user");
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 });
 
